@@ -1,0 +1,65 @@
+Option Explicit
+Sub 梯度下降()
+
+
+Dim w As Double
+Dim b As Double
+Dim eta As Double
+Dim x As Range, y As Range, y_hat As Range
+Dim dw As Double, db As Double
+Dim loss As Double
+Dim iteration As Integer, n As Integer, i As Integer
+
+'获取初始参数和学习率
+w = Range("d2").Value
+b = Range("e2").Value
+eta = Range("f2").Value
+n = Range("a2:a16").Rows.Count
+
+'获取数据
+Set x = Range("a2:a16")
+Set y = Range("b2:b16")
+Set y_hat = Range("c2:c16")
+
+'初始化梯度
+dw = 0
+db = 0
+
+'计算梯度
+For i = 1 To n
+y_hat.Cells(i, 1).Value = w * x.Cells(i, 1).Value + b
+dw = dw + (w * x.Cells(i, 1).Value + b - y.Cells(i, 1).Value) * x.Cells(i, 1).Value
+db = db + (w * x.Cells(i, 1).Value + b - y.Cells(i, 1).Value)
+Next
+
+dw = dw / n
+db = db / n
+
+'计算损失率
+For i = 1 To n
+    loss = loss + w * x.Cells(i, 1).Value + b - y.Cells(i, 1).Value
+Next
+
+loss = loss / (2 * n)
+Range("g2").Value = loss
+
+'梯度下降
+w = w - eta * dw
+b = b - eta * db
+
+'更新参数
+Range("d2").Value = w
+Range("e2").Value = b
+
+'记录迭代次数
+iteration = Range("h2").Value + 1
+Range("h2").Value = iteration
+
+End Sub
+
+Sub 执行()
+Dim i As Integer
+For i = 1 To 10000
+    Call 梯度下降
+Next
+End Sub
